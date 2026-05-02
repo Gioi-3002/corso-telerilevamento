@@ -8,3 +8,25 @@ gioia^fiore
 gioia/fiore #fare operazioni con gli oggetti
 viola<-c(9,6,10,50,3,9)
 primula<-c(0,6,3,40,7,2)
+#creo un plot con i miei elementi 
+plot(primula, viola)
+plot(primula, viola, col="blue", pch=19)
+plot(primula, viola, col="blue", pch=19, cex=2)
+plot(primula, viola, col="blue", pch=19, cex=2, xlab="pollution", ylab="numero di viole")
+#ecco qui creato il grafico con pch che indica la forma che voglio dare alle unità in questo caso cerchi pieni e cex che indica la grandezza dei cerchi
+# installazione pacchetti
+# su CRAN uso questi due comandi il primo per installare il secondo per caricare la libreria
+install.packages("terra")
+library(terra)
+
+# su GitHUb invece devo prima installare il pacchetto dev.tools che mi permette di installare pacchetti da no CRAN softwares e poi faccio sempre caricameno della libreria 
+#seguito da install_github per poter installare il pacchetto 
+install.packages("devtools") # remotes
+library(devtools)  # remotes
+install_github("ducciorocchini/imageRy")#R me ha detto che questa funzione non è quella aggiornata
+#procedo con pacchetto pak che permette di installare pacchetti sia da CRAN che da github
+pak::pak("ducciorocchini/imageRy")
+# è una valida e più rapida alternativa rispetto a install_github o remotes
+library(imageRy)
+#comando per vedere da cosa è composto pacchetto imageRy dovrebbe dare una lista di tutte le immagini 
+im.list()
