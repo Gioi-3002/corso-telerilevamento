@@ -1,0 +1,10 @@
+2+3 #operazioni
+gioia<-2+3 #creare oggetti
+gioia
+fiore<-5+9
+fiore #visualizzare oggetto
+gioia+fiore
+gioia^fiore 
+gioia/fiore #fare operazioni con gli oggetti
+viola<-c(9,6,10,50,3,9)
+primula<-c(0,6,3,40,7,2)
