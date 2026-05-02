@@ -1,0 +1,61 @@
+library(terra)          # Per la gestione e l'analisi di dati raster (immagini multispettrali)
+library(imageRy)        # Per l'elaborazione e la visualizzazione di immagini multispettrali
+library(devtools)       # Per installare pacchetti da GitHub (non sempre necessario)
+library(viridis)        # Per utilizzare colormap accessibili e scientificamente accurate
+library(ggplot2)        # Per la creazione di grafici avanzati e personalizzati
+library(patchwork)      # Per combinare più grafici in un'unica visualizzazione
+library(GGally)         # Per estendere le funzionalità di ggplot2 (es. matrici di scatter plot)
+
+# Elenca le funzioni disponibili nel pacchetto imageRy
+im.list()
+#importare la banda B2 di un immagine sentinel 2 che corrisponde a bluBlue (490 nm)
+Risoluzione spaziale: 10 metri
+Utilizzo: Visualizzazione in colori naturali, mappatura delle acque, e analisi della vegetazione.
+#sentinel 2 intanto è una missione che è composta da due satellitie in totale ci sono 13 bande di sentinel2 ognuna con una risoluzione spaziale diversa
+
+
+Il Sentinel-2 trasporta lo strumento Multispectral Imager (MSI), che è il suo carico principale per l’osservazione della Terra. Questo strumento acquisisce immagini in 13 bande spettrali, coprendo:
+
+Visibile e infrarosso vicino (NIR)
+Infrarosso a onde corte (SWIR)
+# Sentinel-2 bands
+# https://gisgeography.com/sentinel-2-bands-combinations/
+#importa l'immagine in banda b2 
+The natural color band combination uses the red (B4), green (B3), and blue (B2) channels. Its purpose is to display imagery the same way our eyes see the world. Just like how we see, healthy vegetation is green. Next, urban features often appear white and grey. Finally, water is a shade of dark blue depending on how clean it is.
+b2 <- im.import("sentinel.dolomites.b2.tif")
+immagine risulta come spiegato sopra
+# cambia colore personalizzandolo, creo io una palette di colori, il valore 100 penso stia ad indicare che 100 saranno le gradazioni di colore 
+cl <- colorRampPalette(c("lightsalmon", "yellow", "mediumpurple1"))(100)
+#a seguire con la funzione plot inserisco tra parentesi il file raster che ho importato, il colore creato dala palette personalizzata
+plot(b2, col=cl)
+# Using viridis per cambiare colore il pacchetto permette di usare delle colorazioni scientificamente accessibili 
+plot(b2, col=inferno(100))
+plot(b2, col=mako(100))
+
+la funzione par
+par(mfrow = c(1, 2))  # Imposta la finestra grafica in 1 riga e 2 colonne
+plot(b2, col = inferno(100))  # Plot della banda B2 con colormap 'inferno'
+plot(b2, col = cl)  # Plot della banda B2 con colormap 'cl' (errore: 'cl' non definita)
+col = viridis(100)  # Colormap 'viridis' predefinita
+col = inferno(100)  # Colormap 'inferno'
+col = plasma(100)   # Colormap 'plasma'
+col = magma(100)    # Colormap 'magma'
+col = cividis(100)  # Colormap 'cividis'
+#per chiudere il grafico corrente faccio:
+  dev.off() #robba bella è che salva automaticamente i file nella working directory se l'hai settata quindi top
+
+  # im.multiframe im.multiframe(1, 2)  # Imposta una finestra grafica con 1 riga e 2 colonne
+plot(b2, col = inferno(100))  # Plot della banda B2 con colormap 'inferno'
+plot(b2, col = cl)  # Plot della banda B2 con colormap 'cl' (errore: 'cl' non definita)
+
+im.multiframe(1,2)
+plot(b2, col=inferno(100))
+plot(b2, col=cl)
+#ora importiamo la banda 3 e 4 e 8 e creo un multiframe con le colorazioni desiderat insomma 
+
+#creazione di un multiframe con tutte e 4 le bande in colorazione "inferno" e inzomm  
+plot(b2, col=inferno(100))
+plot(b3, col=inferno(100))
+plot(b4, col=inferno(100))
+plot(b8, col=inferno(100))
+
