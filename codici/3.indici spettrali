@@ -1,1 +1,25 @@
+Gli indici spettrali sono molti: parliamo dell'NDVI l'acronimo normalized difference vegetation index, viene usato per lo studio della vegetazione
+- primi studi ERTS 26 luglio 1972 messa in orbita di questo satellite
+- scopo delle prime analisi è stato studio della great plains è una pianura che si espande su area vasta del globo e con differente varietà di climi e ecosistemi da canada a florida
+I ricercatori che lavorarono su questo progetto correlazione tra caratteri biofisici e la fituma spettrale presente in quest'area
+il primo report ufficiale nel 1973 dalla texas university prima notizia in cui viene ripreso NDVI (primo indice che è stato studiato)
+normalizza la differenza tra il NIR e il red 
+NDVI=(NIR-red)/(NIR+red) --> ci consente di valutare la vigorosita della vegetazione su cui stiamo studiando
+se il valore è compreso
+tra -1 e 0 nuvole acqua neve 
+tra 0 e 0,1 suolo spoglio 
+tra 0.1 e 0.5 aree arbustive , vegetazione poco vigorosa 
+tra 0.5 e 1 vegetazione denza molto vigorosa
+verrà utilizzata l'area del sentinel 2 del vesuvio in quel punto dove vi è stato un incendio. Vorrei capire come si recuperano le immagini ma penso verrà spiegato in futuro. 
 
+#dopo uno stakketto introduttivo
+vengono richiamate library varie 
+library(terra)
+library(imageRy)
+library(viridis)
+#mostrata la lista dei files e importazione di due immagini 
+mato1992 <- im.import("matogrosso_l5_1992219_lrg.jpg")
+#
+mato1992 <- flip(mato1992)
+flip(mato1992, direction = "y")  # verticale
+flip(mato1992, direction = "x")  # orizzontale
