@@ -58,4 +58,90 @@ plot(b2, col=inferno(100))
 plot(b3, col=inferno(100))
 plot(b4, col=inferno(100))
 plot(b8, col=inferno(100))
+#creazione di un rasterstack spatraster, il plot mostrerà ogni banda separatamente non è ancora una composizione RGB
+sentinel <- c(b2, b3, b4, b8)
+plot(sentinel)
+plot(sentinel, col=inferno(100))
+#seleziona la banda 8 (NIR) quella che permette di vedere bene la vegetazione sana da quella non
+plot(sentinel$sentinel.dolomites.b8)
 
+# layer1=b2, layer2=b3, layer3=b4, layer4=b8, in questo caso imparo a selezionare le bande sulla base del loro indice numerico
+#selezionando la banda 8(near infrared NIR, si dovrebbe vedere un forte contrasto tra vegetazione e suolo
+#selezionando la banda 3 (verde) si dovrebbe vedere qualcosa di più simile a ciò che vede occhio umano
+#quest codici rispetto agli altri sono equivalenti concettualmente
+plot(sentinel[[4]])
+plot(sentinel[[2]])
+
+#fino ad ora abbiamo usato una logica plot base! ora switchamo a logica ggplot
+# i file .tif (le bande sentinel) vengono salvati come oggetti e direi che fin qui ci siamo 
+# si tratta di immagini raster 
+b2 <- im.import("sentinel.dolomites.b2.tif")
+b3 <- im.import("sentinel.dolomites.b3.tif")
+b4 <- im.import("sentinel.dolomites.b4.tif")
+b8 <- im.import("sentinel.dolomites.b8.tif")
+# ggplot la funzione crea un oggetto grafico NON disegna subito ma non capisco bene in che senso
+p1 <- im.ggplot(b8)
+p2 <- im.ggplot(b4)
+#di base abbiamo creato dei graficidella banda b8 e della b4
+#differenza da plot in quanto questo stampa subito mentre im.ggplot costruisce grafico 
+p1+p2
+#questa somma serve a sovrapporre o affiancare cosa che posso fare grazie a library patchwork 
+affiancandole su R compare immagine dei 2 ggplot vicini
+# Multiframe:è una suddivisione della finestra grafica in più riquadri per mostrare più immagini/grafici insieme
+qui sotto codici diversi però per fare più o meno la stessa cosa
+# 1. par(mfrow=c(1,2))--> nella stessa finestra in due colonne (1x2)
+# 2. im.multiframe(1,2)--> con questa si fa praticamente la stessa cosa
+# 3. stack--> sentinel<-(b2,b3,b4,b8) creo un oggetto multilayer è utile per vedere tutto insieme e per raster
+# 4. ggplot2 patchwork--> utile per fare dei grafici più elegant si possono fare dei layout più complessi
+
+#a sto point impariamo a plottare un RGB vuol dire creare un'immagine a colori combinando tre bande (red green blue canali) invece di guardarle separatamente
+#teoricamente li metti insieme e ottieni un'immagine vera
+richiamo lo stack e ricordo che gli indici indicano le bande 
+sentinel<-(b2,b3,b4,b8)
+1=b2 (blue)
+2=b3 (green)
+3=b4 (red)
+4=b8 (NIR)
+# 3 filters and 4 bands--> applica 3 filtri ricombinando le 4 bande
+im.plotRGB(sentinel, r=3, g=2, b=1) # queste tre le usa per natural colors quindi risultato immagine simile a occhio umano  
+im.plotRGB(sentinel, r=4, g=3, b=2) # false colors dove la vegetazione appare rosso acceso, acqua scura e vari colori per il suolo (molto usato per analisi ambientali)
+ottimo lavoro!! nel falso colore la vegetazione appare rossa perchè riflette fortemente nel vicino infrarosso che viene assegnato al canale rosso dell'immagine RGB
+#creaiamo multiframe
+im.multiframe(1,2)
+im.plotRGB(sentinel, r=3, g=2, b=1) --> colori naturali simili google maps
+im.plotRGB(sentinel, r=4, g=3 , b=2)--> falso colore vegetazione appare rossa perchè nir è stato montato su canale del rosso
+#famo un confronto 
+im.multiframe(1,2)
+plot(sentinel[[(4)]])--> così mostro solo la banda del NIR
+poi faccio im.plotRGB(sentinel, r=4, g=3 , b=2)
+#ottimo funge e comprendo prima vedo il nir e poi metto il NIR sul canale del verde
+im.plotRGB-->(sentinel, r=3,g=4,b=2)--> dovrebbe risultare con una vegetazione verde brillate perchè NIR è nel canale del verde
+metto il nir su canale del blu così vegetazione appare blu ciano
+im.plotRGB(sentinel, r=3, g=2, b=4)
+#plotto tutte le 4 modalità di RGB plots in uno stesso multiframe 
+im.multiframe(2,2)
+im.plotRGB(sentinel, r=3, g=2, b=1)
+im.plotRGB(sentinel, r=4, g=3 , b=2)
+im.plotRGB(sentinel, r=3, g=4, b=2)
+im.plotRGB(sentinel, r=3, g=2, b=4)
+
+# Positioning of visible bands, le bande del visibile si possono scambiare per cambiare resa cromatica
+im.multiframe(1,2)
+im.plotRGB(sentinel, r=4, g=3, b=2) # false colors questa è la classica false color vegetation eff visivo veg rosso intenso suolo toni + naturali
+im.plotRGB(sentinel, r=4, g=2, b=3) # false colors il NIR è sempre nel rosso ma ho scambiato verde e blu veg sempre rossa acqua cambio tonalità e suolo e aree urbane cambiano contrasto e colore
+
+pairs(sentinel) creo una matrice di scatterplot tra tutte le bande
+confronto ogni banda con ogni altra
+ggpairs(sentinel) crea un grafico di pairs praticamente più leggibile ogni scatter mostra istogrammi, correlazioni numeriche densità dei valori 
+ogni riga e colonna rapppresetano una banda (B2 B3 B4 B8) e ogni casella rappresenza un confronto tra le due bande. Ogni riquadro è uno scatter plot (X UNA BANDA Y UN'ALTRA) ogni punto è un pixel dell'immagine. B4 vs B3 (rosso vs verde) punti molto allineai bande simili se i punti sono sparsi abbiam differenze spettrali 
+B8 vs B4 (NIR vs rosso) B8 alto riflette tanto B4 basso assorbe rosso punti separati indicano forte contrasto
+se le due bande sono correlate e che quindi info simili i punti saranno in diagonale
+se non sono correlate e i punti sono sparsi significano info diverse
+
+# simplifying the function, qui semplifico la funzione semplicemente eliminando r= g= 
+im.plotRGB(sentinel, 4, 2, 3) # false colors
+
+# plotRGB() from terra, il pacchetto permette di fare queste modifiche
+plotRGB(sentinel, 4, 2, 3) 
+plotRGB(sentinel, 4, 2, 3, stretch="lin") --> migliora contrasto in modo uniforme 
+plotRGB(sentinel, 4, 2, 3, stretch="hist")--> enfatizza dettagli e differenze
