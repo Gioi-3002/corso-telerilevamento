@@ -1,0 +1,16 @@
+#serie di codici per fare analisi multitemporale
+Le serie multitemporali di immagini telerilevate rappresentano uno strumento
+essenziale per il monitoraggio di fenomeni caratterizzati da stagionalità, come
+avviene ad esempio in agricoltura. Tale tipo di monitoraggio, esteso a intervalli
+temporali sempre più ampi, è reso possibile dalla grande disponibilità di
+immagini gratuite e moderni strumenti di calcolo.
+In tale contesto si inserisce Google Earth Engine (GEE), piattaforma di analisi
+geospaziale basata su cloud, ideata per archiviare e processare grandi moli di
+dati (Gorelick et al., 2017)
+#carico le librerie necessarie
+library(terra)
+library(imageRy)
+library(viridis)
+library(ggplot2)
+# install.packages("ggrdiges")
+library(ggridges)
