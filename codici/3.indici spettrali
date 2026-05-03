@@ -19,7 +19,99 @@ library(imageRy)
 library(viridis)
 #mostrata la lista dei files e importazione di due immagini 
 mato1992 <- im.import("matogrosso_l5_1992219_lrg.jpg")
-#
+#forse importante da sottolineare che questa è un'immagine non una banda spettrale, dunque è già cucinata e pronta per esser? mangiata? chi lo sa!
 mato1992 <- flip(mato1992)
 flip(mato1992, direction = "y")  # verticale
 flip(mato1992, direction = "x")  # orizzontale
+#mato1992 è un raster multibanda da quello che mi sa sta scritto
+# l1=NIR l2=red l3=green
+im.plotRGB(mato1992, 1, 2, 3) #false color con NIR su canale del rosso 
+#qui ho messo NIR sul canale del verde
+im.plotRGB(mato1992, 2, 1, 3)
+# NIR ontop of the blue, sul canale del blu!! quindi tutta veg apparirà blu
+im.plotRGB(mato1992, 3, 2, 1)
+
+#ora facc esercizzz importo immagine matogrosso2006
+#faccio il multiframe con le due picss una da 1992 e altra 2006
+im.multiframe(1,2)
+im.plotRGB(mato1992, 1, 2, 3)
+im.plotRGB(mato2006, 1, 2, 3)
+#me sa che devo richiama library terra
+library(terra)
+im.multiframe(1,2)
+plotRGB(mato1992, 1, 2, 3, stretch="hist")
+plotRGB(mato2006, 1, 2, 3, stretch="hist")
+#le immagini risultano più vivide
+#cambio i canali dei colori, NIR nel canale del verde
+im.plotRGB(mato1992, 2, 1, 3)
+im.plotRGB(mato2006, 2, 1, 3)
+#cambio nel blu se vede bbene dale 
+im.plotRGB(mato1992, 2, 3, 1)
+im.plotRGB(mato2006, 2, 3, 1)
+
+#calcolo effettivo del DVI: non ha un range fisso dipende dalla scala dei pixel e i bit ervono per definire questa scala 
+# l1=NIR l2=red l3=green
+#creo un nuovo raster dove ogni pixel è DVI=NIR-Red
+#per ogni pixel confronto la risposta nel vicino infrarosso con rispost nel rosso 
+dvi1992 <- mato1992[[1]] - mato1992[[2]]
+#questo calcolo funziona perche la veg sana ha NIR alto mentre rosso basso perchè lo assorbe quindi DVI alto,suolo nudo invece implica NIR medio RED medio quindi DVI~0 mentre acqua NIr basso e RED basso DVI basso o negativo
+# 8 bit, è un esempio teorico di un'immagine che ha 8 bit quindi i suoi pixel possono valere tra 0 e 255 in quanto 2^8=255
+di conseguenza calcola il massimo DVI e il minimo DVI
+# NIR - red = 255 - 0 = 255 max DVI
+# NIR - red = 0 - 255 = -255 min DVI
+#questa cosa vale solo però per immagini 8-bit "pura" quindi JPEG, immagini già visualizzate (RGB classico) dati già compressi non per landsat sentinel-2 e dati scientifici grezzi
+# NDVI, poi calcola l'NDVI ovvero quello normalizzato che varia da -1 a 1 invece è relativo il bro
+
+(NIR- red)/(NIR + red)
+
+# 8 bit
+# NIR - red = (255 - 0) / (255 + 0) = 1 max NDVI
+# NIR - red = (0 - 255) / (0 + 255) = -1 min NDVI
+
+# 4 bit
+# NIR - red = (15 - 0) / (15 + 0) = 1 max NDVI
+# NIR - red = (0 - 15) / (0 + 15) = -1 min NDVI
+
+dvi2006<-mato2006[[(1)]]-mato2006[[(2)]]
+#calcolo NDVI di entrambe mato1992 e mato2006
+ndvi1992 <- dvi1992 / (mato1992[[(1)]] + mato1992[[(2)]])
+ndvi2006 <- dvi2006 / (mato2006[[(1)]] + mato2006[[(2)]])
+
+#im.multiframe(1,2)  --> faccio il multiframe plottando le mie immagini con calcolato ndvi nelle quali vorrei capire bene ciò che si vede e no
+plot(ndvi1992, col=inferno(100))
+plot(ndvi2006, col=inferno(100))
+#jador allora nelle immagini plottate se vede chiaramente insomma posti aree in cui NDVI vale un tot tipo uno che sta ad indicare vegetazione vasta e posti in cui vale 0 che sta ad indicare un suolo con non molta presenza etc
+#comunque matogrosso è una piana in braziuu 
+-1 sta ad indicar acqua da 0.5 in su vegetazione densa 
+da 0 a 0.2 suolo nudo oppure urbano da 0.2 a 0.5 vegetazione scarsa 
+# DVI by imageRy
+dvi1992 = im.dvi(mato1992, 1, 2)
+dvi2006 = im.dvi(mato2006, 1, 2)
+plot(dvi1992, col=inferno(100))
+plot(dvi2006, col=inferno(100))
+
+# NDVI via imageRy
+ndvi1992 = im.ndvi(mato1992, 1, 2)
+ndvi2006 = im.ndvi(mato2006, 1, 2)
+plot(ndvi1992, col=mako(100))
+plot(ndvi2006, col=mako(100))
+
+# Exercise: plot DVIs and NDVIs for the two dates in two rows and columns (svolto)
+im.multiframe(2,2)
+plot(dvi1992, col=inferno(100),main="DVI Matogrosso, 1992")
+plot(dvi2006, col=inferno(100),main="DVI Matogrosso, 2006")
+plot(ndvi1992, col=mako(100),main="NDVI Matogrosso, 1992")
+plot(ndvi2006, col=mako(100),main="NDVI Matogrosso, 2006")
+#ho concluso operato!
+
+
+
+
+
+
+
+
+
+
+
+
