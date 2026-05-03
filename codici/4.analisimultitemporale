@@ -8,9 +8,12 @@ In tale contesto si inserisce Google Earth Engine (GEE), piattaforma di analisi
 geospaziale basata su cloud, ideata per archiviare e processare grandi moli di
 dati (Gorelick et al., 2017)
 #carico le librerie necessarie
+library(ggridges)
 library(terra)
 library(imageRy)
 library(viridis)
 library(ggplot2)
-# install.packages("ggrdiges")
+# install.packages("ggrdiges")--> a cosa serve questo pacchetto?Il pacchetto ggridges in R serve per creare grafici a linee ridgeline (o “grafici a cresta”), una visualizzazione utile per mostrare la distribuzione di una variabile numerica suddivisa per categorie.
+install.packages("ggridges")
 library(ggridges)
+im.list()
