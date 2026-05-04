@@ -82,3 +82,23 @@ names(ndvi) <- c("02_feb", "05_may", "08_aug", "11_nov")
 names(ndvi)
 #applico la funzione pairs che dovrebbe restituire un confronto tra bande 
 pairs(ndvi) 
+plot(ndvi[[1]], ndvi[[2]])
+#bu a me non si è creata proprio la matrice ma posso richiamare con la funzione sopra
+nube sparsa stagioni molto diverse, se vegetazioene è aumentata o diminuita
+punti sopra la diagonale (NDVI maggiore nel secondo mese) 
+sotto NDVI diminuito 
+#come interpreto?linea stretta indica forte correlazione mentre effetto nuvola indica cambiamenti forti
+
+#creo uno scatter+ linea di riferimento che è molto utile per leggere i cambiamenti tra due date
+# y = x
+# y = a + bx
+# y = 0 + 1x = x 
+# a = 0
+# b = 1
+
+# insert the line x=y quindi metto x=0 e y=1 la linea significa nessun cambiamento. Punti sulla linea (NDVI invariato), punti sopra la linea NDVI aumentato (veg cresce) punti sotto la linea (NDVI diminuito senescenza raccolto stress)
+abline(0, 1)
+#in questo caso si suppone che si abbia messo limite delle x e limite delle y nel grafico quindi un'aggiuntina ma nulla de più forse per compattare ma chiedo a chat
+#sto chiedendo a R:"mostrami il grafico solo tra -0.3 e 0.9 su entrambi gli assi" ed è todo
+plot(ndvi[[1]], ndvi[[2]], xlim=c(-0.3,0.9), ylim=c(-0.3,0.9))
+abline(0, 1)
