@@ -17,3 +17,68 @@ library(ggplot2)
 install.packages("ggridges")
 library(ggridges)
 im.list()
+#importa file
+EN_01 <- im.import("EN_01.png")--> per leggere il file e trasformarlo in raster
+EN_01 <- flip(EN_01)--> ribalta l'immagine qui ribalta asse y 
+plot(EN_01) --> visualizzo il raster 
+#mappa multispettrale che indica le concentrazioni di NO2 in varie parti del globo
+EN_13 <- im.import("EN_13.png")
+EN_13 <- flip(EN_13)
+plot(EN_13)
+#importa un'altra mappa che penso sia del 2013 suppongo 
+#esercizio plotto le due immagini una sopra l'altra
+#poi svolge una differenza--> fa una vera e propria analisi di cambiamento sottraendo le immagini 
+# Differencing
+ENdif <- EN_01[[1]] - EN_13[[1]] --> seleziona la banda 1 del multispettro perchè è quella che contiene il dato che mi interessa
+#il risultato è un nuovo raster dove ogni pixel indica quanto è cambiato il valore nel tempo
+valori>0 a gennaio c'era più NO2 rispetto a marzo 
+valori< a marzo c'è più NO2 aumento nel tempo 
+valoru= 0 nesun cambiamento nel tempo
+#nb: se fosse un'immagine vera RGB se seleziono [[1]] sto analizz solo canale rosso
+#il che non ha senso scientifico per capire cosa ho davvero devo fare
+EN_01 o nlyr(EN_01) se mi restituisce =1 ho solo un layer [[1]] è obbligatorio se >1 devo capire cosa rappresentano le bande
+names(EN_01) stampa i nomi delle bande
+dev.off()
+plot(ENdif)
+#####esempio della groenlandia che succede inzom####
+#quello che posso creare è uno stack importando i miei 4 raster
+g2000<-im.import("greenland.2000.tif")
+g2005<-im.import("greenland.2005.tif")
+g2010<-im.import("greenland.2010.tif")
+g2015 <- im.import("greenland.2015.tif")
+sg <- c(g2000, g2005, g2010, g2015)-> e poi li unisco tra loro
+plot(sg)--> per vedere i 4 raster etcetc
+#####oppure## potrebbe capitare un file che già li contiene dentro come gr
+gr<-im.import("greenland") -- lo importo
+names(gr) -- posso vedere i nomi dei file raster e vedo che combaciano 
+plot(gr) -- lo plotto
+im.multiframe(1,2) -- creo un multiframe che mi mostri il layer [[1]] e il [[4]] in col plasma con 100 nuances
+plot(gr[[1]], col=plasma(100))
+plot(gr[[4]], col=plasma(100))
+seleziono quindi #greenland 2000 e greenland 2015
+names(gr)
+[1] "greenland.2000" "greenland.2005"
+[3] "greenland.2010" "greenland.2015"
+#faccio la differenza e plotto
+dif<-gr[[4]]-gr[[1]]
+dev.off()
+plot(dif)-- anche in questo caso nei punti con differenza negativa il ghiaccio è diminuito positivi è aumentato  vicino a 0 nessun cambiamento 
+##ottengo una mappa di cambiamento non valore assoluto
+# crea composizione RGB multitemporale come se interpreta se pixel è grigio bianco nessun cambiamento se tende al rosso alto nel 2000 poi diminuisce  se tende al blu alto nel 2015 aumento nel tempo  se ha colori diversi cambiamenti complessi negli anni
+im.plotRGB(gr, r=1, g=2, b=4)
+a differenza della funz dif il cambiamento è qualitativo in questo caso non quantitativo, non ci dice di quanto ma ci dce che cambia o non cambia
+# NDVI data importa l'NDVI 
+ndvi <- im.import("Sentinel2_NDVI_2020")
+names(ndvi)
+ndvi
+- ottengo indice della vegetazione nel corso di 4 momenti temporali diversi febbraio ,aggio agosto e novembre 
+
+# istogrammi crea gli istogrammi che mostrano come varia ndvi nell'area considerata è separato per ogni mese 
+hist(ndvi)
+## ridgeline plotting non è separato sovrappone più dstribuzioni 
+im.ridgeline(ndvi, scale=1, palette="viridis")
+#assegno dei nomi ai miei files che nn ne hanno in questo modo sono più comprensibili
+names(ndvi) <- c("02_feb", "05_may", "08_aug", "11_nov")
+names(ndvi)
+#applico la funzione pairs che dovrebbe restituire un confronto tra bande 
+pairs(ndvi) 
