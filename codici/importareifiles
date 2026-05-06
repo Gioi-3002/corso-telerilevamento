@@ -1,0 +1,35 @@
+#inizia caricando le librerie
+library(terra)
+library(imageRy)
+library(viridis)
+library(ggplot2)
+library(patchwork)
+#settare la wd e poi invece per capire se stai lavorando su quella giusta 
+setwd("~/Desktop/")
+#qui fai 
+getwd()
+#per vedere i file che hai dentro la workoing directory e quindi verificare che ci siano dentro quelli di cui hai effettivamente bisogno 
+list.files()
+#carico i file di cui ho bisogno e finisco per metterci dentro quelli che mi servono 
+#nb. devi caricare i pacchetti gioia lo scalzzzz me raccuman
+rgb <- rast("DJI_20260331174728_0001_D.JPG")
+plot(rgb)   #questo in formato JPG è quello che mi restituisce l'immagine in colori reali 
+
+gre <- rast("DJI_20260331174728_0001_MS_G.TIF")
+
+red <- rast("DJI_20260331174728_0001_MS_R.TIF")
+
+nir <- rast("DJI_20260331174728_0001_MS_NIR.TIF")
+#quando importo i file raster che succede di base mi risputa [rast] unknown extent questo errore che in realtà non è un errore significa solo che il file non ha coordinate geografiche
+#faccio lo stack
+stack<- c( gre, red, nir) ##facendo in questo modo creo un plot che mi fa vedere le bande separate tra loro
+plot(stack) #qui lo plotto per effettivamente vederlo 
+#poi creo effettivamente l'RGB mettendo falso colore
+plotRGB(stack, r=3, g=2, b=1, stretch="lin") lin per analisi quantitativa
+plotRGB(stack, r=3, g=2, b=1, stretch="hist") hist per interpretazione visiva in quanto migliora la classificazione visiva tra elementi per la serie suolo vegetazione acqua
+# without stretch declaration
+im.plotRGB(stack, r=3, g=2, b=1)
+plotRGB() vs im.plotRGB() queste due funzioni vengono usate da due pacchetti diversi la prima da pacchetto terra che ha opzioni stretch 
+mentre la seconda viene da un'altro pacchetto senza dichiarare lo stretch esplicitamente
+meglio usare la prima funzione RGB piuttosto che la seconda
+#
