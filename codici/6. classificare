@@ -1,0 +1,27 @@
+#carica queste librerie
+library(terra)
+library(imageRy)
+library(ggplot2)
+library(patchwork)
+# set wd
+setwd("~/Downloads")
+# C://utenteovveroio/Downloads/
+getwd()
+#importa immagine che non so da dove arrivi forse da una libreria? bu chi lo sa
+sun<-im.import("Solar_Orbiter_s_first_views_of_the_Sun_pillars.jpg")
+#classify serve a classificare in modo automatico un'immagine satellitare
+
+sunc <- im.classify(sun) --> prende l'immagine sun e raggruppa i pixel simili tra loro ahh fiko tipo acqua suolo nubi etcetc senza che io dica quali, tuttavia è una classificazione non supervisionata
+sunc <- im.classify(sun, seed=3) --> in questo caso imposta seed = 3 il che serve a rendere il risultato riproducibile, in quanto se rifacessi la stessa mossa prima risulterebbe un po' diverso
+sunc <- im.classify(sun, seed=42) --> anche in questo caso seed=42 il risultato sarà leggermente diverso da seed 3 però comunque sarà riproducibile 
+# import Grand Canyon data, importa data grancanyon
+can <- im.import("dolansprings_oli_2013088_canyon_lrg.jpg")
+
+canc<-im.classify(can, seed=42, num_clusters=4)--> “dividi tutti i pixel in 4 gruppi simili” esattamente questo qui sceglie con num_cluster le modalità in cui vuole raggruppare in questo caso 4 
+## classifying data out of R
+list.files()
+#importa data
+getwd()
+dji <- rast("dji.jpg")
+dji <- flip(dji)
+plot(dji)
