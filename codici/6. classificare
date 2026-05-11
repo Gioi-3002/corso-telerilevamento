@@ -25,7 +25,7 @@ getwd()
 dji <- rast("dji.jpg")
 dji <- flip(dji) -- e vabbè non mi si flippa ma è okok scherzavo è che era già girata 
 plot(dji)
-# classify data, applica la classify sul jpg
+# classify data, applica la classify sul jpg   -- Dopo una classificazione, ogni pixel non ha più un colore RGB o un valore spettrale originale, ma appartiene a una classe numerica.
 djic <- im.classify(dji, num_clusters=2)-- in due classi, perchè funz indica 2
 #esempio con matogrosso ma devo cambiare la working directory vado nei download perchè queste immagini le ho importate con imageRy ottimo per le due immagini faccio lo stesso passaggio 
 setwd(" copio percorso download e copio e incollo qui")
@@ -35,4 +35,23 @@ setwd(" copio percorso download e copio e incollo qui")
 +   value = c(2, 1),   #tutti i pixel con valore 2 → chiamali "forest"
 tutti i pixel con valore 1 → chiamali "human" 
 +   label = c("forest", "human")  #con questa funzione se poi interrogo levels(m2006c) ottengo la tabella che mi riporta a 1 che corrisponde a foresta e 2 a human
-#le classi devono corrispondere davvero alle classi ottenute quindi prima di fare questa cosa devo capire quale cluster corrisponda a quale 
+#le classi devono corrispondere davvero alle classi ottenute quindi prima di fare questa cosa devo capire quale cluster corrisponda a quale facendo plot( 
+# Calculating frequencies de cosa? significa calcolare quanti pixel appartengono a una determinata classe 
+f1992 <- freq(m1992c)  -- ottengo una tabella che mi restituisce per ogni classe quanti pixel freq di distribuzione 
+
+prop1992 <- f1992$count / ncell(m1992c)  --proporzione rapporto tra numero di pixel per classe e numero totale, mi restituisce valore tra 0 e 1 ncell(m1992c) sta per numero tot di pixel nell'immagine
+
+perc1992 <- prop1992 * 100  -- qui invece valore tra 0 e 100 che ottengo semplicemente moltiplicando per 100
+Sto passando da:
+pixel grezzi (freq)
+→ proporzione del territorio
+→ percentuale interpretabile
+# Table creo una tabella che riordini i valori in tot
+tabout <- data.frame(
+  class=c("Forest","Human"),
+  perc1992=c(83, 17),
+  perc2006=c(45, 55)
+  )
+#qui sotto cosa fa? 
+ggplot(tabout, aes(x=class, y=perc1992, color=class)) + # structure
+  geom_bar(stat="identity", fill="white") # bar plot
