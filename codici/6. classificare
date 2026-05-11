@@ -20,7 +20,7 @@ can <- im.import("dolansprings_oli_2013088_canyon_lrg.jpg")
 canc<-im.classify(can, seed=42, num_clusters=4)--> “dividi tutti i pixel in 4 gruppi simili” esattamente questo qui sceglie con num_cluster le modalità in cui vuole raggruppare in questo caso 4 
 ## classifying data out of R
 list.files()
-#importa data
+#importa data ma di che dji sta parlando?
 getwd()
 dji <- rast("dji.jpg")
 dji <- flip(dji)
