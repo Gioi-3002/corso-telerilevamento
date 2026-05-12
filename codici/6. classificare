@@ -46,12 +46,26 @@ Sto passando da:
 pixel grezzi (freq)
 → proporzione del territorio
 → percentuale interpretabile
-# Table creo una tabella che riordini i valori in tot
+# Table creo una tabella che riordini i valori in tot le due classi incuse sono foresta e human e per casciuna le percentuali nel 1992 e 2006
 tabout <- data.frame(
   class=c("Forest","Human"),
   perc1992=c(83, 17),
   perc2006=c(45, 55)
   )
-#qui sotto cosa fa? 
-ggplot(tabout, aes(x=class, y=perc1992, color=class)) + # structure
-  geom_bar(stat="identity", fill="white") # bar plot
+#qui sotto cosa fa? un grafico a barre a partire dalla tabella creata sopra 
+ggplot(tabout, aes(x=class, y=perc1992, color=class)) + # structure usa il dataframe tabout aes significa estetica (mappatura grafica), poi sulle x metti la classe e sulle Y perc nel 1992, col=class significa che assegno ad ogni classe un colore diverso 
+  geom_bar(stat="identity", fill="white") # bar plot dico a r di produrre un bar plot con stat="identity" gli sto dicendo di usare direttamente i valori di perc1992, fill=white gli dico di riempire le barre di bianco e il bordo rimarrà del colore delle classi 
+#ottimo plotto per esercizio le bars di percentuale del 2006 ggplot(tabout, aes(x=class, y=perc2006, color=class))+geom_bar(stat="identity", fill="white")
+###ora usiamo la library PATCHWORK alè
+# Using patchwork! 
+p1 <- ggplot(tabout, aes(x=class, y=perc1992, color=class)) + # structure
+  geom_bar(stat="identity", fill="white") + # bar plot 
+  ylim(c(0,100)) + # limits imposta il limite di 100 sull'asse delle y
+  theme(legend.position="none")  # removing legend perchè sennò risulterebbe rindondante
+
+p2 <- ggplot(tabout, aes(x=class, y=perc2006, color=class)) + # structure
+  geom_bar(stat="identity", fill="white") + # bar plot
+  ylim(c(0,100)) + # limits
+  theme(legend.position="none")  # removing legend
+
+p1 + p2 #top di base mette insieme i due barplot con la library patchwork e finisco l'opera 
