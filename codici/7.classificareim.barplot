@@ -1,0 +1,64 @@
+##se chiama questa parte classificare remote sensing data capiremo presto qual'è la differenza tra i due capitoletti 
+#https://zenodo.org/records/19660762
+#richiama queste librerie 
+library(terra)
+library(imageRy)
+library(ggplot2)
+# install.packages("patchwork")
+library(patchwork)
+im.import("Solar_Orbiter_s_first_views_of_the_Sun_pillars.jpg")
+sunc <- im.classify(sun, num_clusters=3) svolge una classificazione e basandomi sull'immagine di prima posso dire anche io che la legenda corrisponda 
+# 1st class in my case = high energy
+# 2nd class in my case = medium energy
+# 3rd class in my case = low energy 
+#---- Matogrosso example esemp di matogrosso 
+
+m1992 <- im.import("matogrosso_l5_1992219_lrg.jpg")
+m1992 <- flip(m1992)
+m2006 <- im.import("matogrosso_ast_2006209_lrg.jpg")
+m2006 <- flip(m2006)
+im.multiframe(1,2)
+plot(m1992)
+plot(m2006)
+
+m1992c <- im.classify(m1992, num_clusters=2)
+# in my case! anche nel mio caso caos
+# forest = class1
+# human = class2
+fin qui sembra tutto uguale a cose già fatte
+# m1992c <- as.factor(m1992c) qui da capire perchè lo fattorizza gli dice di trattare i numeri non più come valori ma come classi 
+# Assign labels assegna le etichette 
+levels(m1992c) <- data.frame(
+  value = c(1, 2),
+  label = c("forest", "human")
+)
+#im.barplot() usa questa funzione serve a creare un grafico a barre delle classi presenti nel raster in questo caso non esce fuori con percentuale ma con numero pixel 
+# im.barplot() -> copy/paste from imageRy
+im.barplot(m1992c)
+
+m2006c <- im.classify(m2006, num_clusters=2)
+# in my case!:
+# forest = class2
+# human = class1
+
+# m2006c <- as.factor(m2006c)
+
+# Assign labels
+levels(m2006c) <- data.frame(
+  value = c(2, 1),
+  label = c("forest", "human")
+)
+
+# barplot
+im.barplot(m2006c)
+##anche qui tramite quella funzione si può arrivare allo stesso risultato 
+
+# patchwork ti riporta i grafici con i valori percentuali ma non confrontabili tra loro 
+p1 <- im.barplot(m1992c, perc=T)
+p2 <- im.barplot(m2006c, perc=T)
+p1 + p2
+
+# percentages in questo caso con la funzione rescale, i valori vengono normalizzati e dunque i due grafic sono comparabili
+p1 <- im.barplot(m1992c, perc=T, rescale=T)
+p2 <- im.barplot(m2006c, perc=T, rescale=T)
+p1 + p2
